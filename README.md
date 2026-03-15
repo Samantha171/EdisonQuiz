@@ -148,7 +148,7 @@ The AI model is used to generate quiz questions based on topic or PDF content.
 # System Architecture
 
 
-\```
+```
 User (Browser)
       │
       │  HTTP Requests
@@ -167,7 +167,7 @@ Backend — Django REST Framework
       ▼                      ▼
 PostgreSQL Database     Groq AI API
 (Render)                (LLaMA 3.3 70B)
-\```
+```
 
 
 ---
