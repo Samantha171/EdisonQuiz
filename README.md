@@ -1,166 +1,591 @@
-# EdisonQuiz
+# EdisonQuiz — AI-Powered Quiz Application
 
-An AI-powered quiz app where you can generate quizzes on any topic, take them, and track how you improve over time. You can also upload your own study material (PDF or TXT) and the AI will generate questions directly from it.
+EdisonQuiz is a web application that generates quizzes using AI.  
+Users can create quizzes from a **topic** or from **uploaded study material (PDF or TXT)**, attempt the quiz, review their answers, and track their quiz history.
 
-**Live App:** https://edisonquiz.vercel.app  
-**Backend API:** https://edisonquiz-backend.onrender.com  
-**GitHub:** https://github.com/Samantha171/EdisonQuiz
-
----
-
-## What it does
-
-- Register and log in securely
-- Generate a quiz on any topic — just type what you want to be tested on
-- Upload a PDF or TXT file and get questions based on your own material
-- Take the quiz one question at a time with a progress bar
-- See your score and review every answer after submitting
-- Retake the same quiz to track improvement, or generate fresh questions on the same topic
-- View your full quiz history with scores and dates
+The goal of this project was to build a practical application that combines **AI, modern web development, and backend API design** into a single learning platform.
 
 ---
 
-## Running it locally
+## Live Demo
 
-You'll need Python 3.10+, Node.js 18+, PostgreSQL, and a free Groq API key from [console.groq.com](https://console.groq.com).
+Frontend  
+https://edisonquiz.vercel.app  
 
-**Backend**
+Backend API  
+https://edisonquiz-backend.onrender.com  
+
+GitHub Repository  
+https://github.com/Samantha171/EdisonQuiz
+
+---
+
+# Features
+
+### Topic-Based Quiz Generation
+Users can generate quizzes by entering any topic.  
+The AI model creates multiple-choice questions based on the topic and difficulty level.
+
+Options available:
+- Easy / Medium / Hard difficulty
+- 5–20 questions per quiz
+
+---
+
+### PDF-Based Quiz Generation
+Users can upload study material as a PDF or TXT file and generate questions directly from it.
+
+How it works:
+1. The backend extracts text from the uploaded material
+2. The extracted content is sent to the AI model
+3. The AI generates questions from the material
+
+Limits applied:
+- Maximum file size: **10MB**
+- Maximum pages processed: **50 pages**
+
+---
+
+### Quiz Attempt Interface
+The quiz interface is designed to be simple and focused.
+
+Features:
+- One question displayed at a time
+- Option selection with visual feedback
+- Navigation between questions
+- Submit answers at the end
+
+---
+
+### Result Review
+After submitting a quiz, users can see:
+
+- Final score
+- Percentage accuracy
+- Correct vs incorrect answers
+- Full review of each question
+
+---
+
+### Quiz History
+Each quiz attempt is stored so users can track progress.
+
+The history page shows:
+- Topic
+- Difficulty
+- Score
+- Date attempted
+
+Users can also retake previous quizzes.
+
+---
+
+### Retake Options
+
+Users have two ways to retake a quiz from the history page.
+
+**Retake Same Quiz**  
+Loads the same set of questions again and creates a new attempt.  
+This allows users to track improvement on the same material.
+
+**Retake New Quiz**  
+Generates a brand new quiz on the same topic, difficulty, and number of questions.  
+This gives variety while keeping the same learning goal.
+
+### Authentication
+The application includes a basic authentication system.
+
+Users can:
+- Register an account
+- Log in
+- Access protected quiz features
+
+Authentication is implemented using **JWT tokens**.
+
+---
+
+### UI Design
+The interface uses a dark theme with purple highlights.
+
+Design features include:
+- Card-based layout
+- Responsive design
+- Mobile-friendly UI
+- Smooth hover interactions
+
+---
+
+# Tech Stack
+
+### Frontend
+- Next.js (React framework)
+- Tailwind CSS
+- Axios for API requests
+- Lucide Icons
+
+Frontend is deployed on **Vercel**.
+
+---
+
+### Backend
+- Django
+- Django REST Framework
+- PostgreSQL
+- Gunicorn
+
+Backend is deployed on **Render**.
+
+---
+
+### AI Integration
+- Groq API
+- LLaMA 3.3 70B model
+
+The AI model is used to generate quiz questions based on topic or PDF content.
+
+---
+
+# System Architecture
+
+Frontend (Next.js)
+│
+▼
+API Requests
+│
+▼
+Django Backend (REST API)
+│
+▼
+Groq AI Model
+│
+▼
+PostgreSQL Database
+
+
+---
+
+# Running the Project Locally
+
+## Prerequisites
+
+Make sure the following are installed:
+
+- Python 3.10 or higher
+- Node.js 18 or higher
+- PostgreSQL
+- Groq API key
+
+---
+
+# Backend Setup
+
+## Clone the repository
 
 ```bash
 git clone https://github.com/Samantha171/EdisonQuiz.git
 cd EdisonQuiz/backend
+```
 
+---
+
+# Running the Project Locally
+
+## Prerequisites
+
+Make sure the following are installed:
+
+- Python 3.10 or higher
+- Node.js 18 or higher
+- PostgreSQL
+- Groq API key
+
+---
+
+# Backend Setup
+
+## Clone the repository
+
+```bash
+git clone https://github.com/Samantha171/EdisonQuiz.git
+cd EdisonQuiz/backend
+```
+
+## Create virtual environment
+
+```bash
 python -m venv venv
-venv\Scripts\activate  # Windows
-source venv/bin/activate  # Mac/Linux
+```
 
+## Activate environment
+
+Windows:
+```bash
+venv\Scripts\activate
+```
+
+Mac/Linux:
+```bash
+source venv/bin/activate
+```
+
+## Install dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
-Create a `.env` file inside `backend/`:
-
-```
-SECRET_KEY=any-random-string
+## Create .env file inside the backend folder
+```bash
+SECRET_KEY=your-secret-key
 DB_NAME=quizdb
 DB_USER=postgres
-DB_PASSWORD=your-password
+DB_PASSWORD=yourpassword
 DB_HOST=localhost
 DB_PORT=5432
 AI_API_KEY=your-groq-api-key
 DEBUG=True
 ```
 
-Then run:
-
+## Run database migrations
 ```bash
 python manage.py migrate
+```
+
+## Start backend server
+```bash
 python manage.py runserver
 ```
 
-**Frontend**
+## Backend runs on:
+```bash
+http://localhost:8000
+```
 
+# Frontend Setup
+
+## Open a new terminal
 ```bash
 cd EdisonQuiz/frontend
+```
+
+## Install dependencies
+```bash
 npm install
 ```
 
-Create a `.env.local` file inside `frontend/`:
-
-```
+## Create .env.local
+```bash
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
-Then run:
-
+## Start development server
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) and you're good to go.
-
----
-
-## Database design
-
-I kept the schema as simple as possible — 4 tables total.
-
-**User** — I used Django's built-in User model instead of building a custom one. It already handles password hashing, authentication, and the admin panel out of the box.
-
-**Quiz** — Stores the topic, difficulty, and number of questions. Questions are generated upfront when a quiz is created and saved to the database. This makes quiz-taking instant and independent of AI availability.
-
-**Question** — Each question has `option_a`, `option_b`, `option_c`, `option_d`, and `correct_answer` stored directly on the row. I considered a separate Choice table but since the AI always generates exactly 4 options, it would've just added extra joins with no real benefit.
-
-**QuizAttempt** — Every time someone takes a quiz, a new attempt row is created. This is what makes the retake feature work cleanly — each attempt is fully independent. I intentionally didn't store `total_questions` here since it's already on the Quiz table — no point storing the same value twice.
-
-**UserAnswer** — Stores the answer the user picked for each question along with whether it was correct. Keeping `is_correct` here means the result page doesn't need to re-join through Question to figure out what was right or wrong.
-
----
-
-## API structure
-
-```
-POST   /api/auth/register
-POST   /api/auth/login
-
-POST   /api/quiz/generate
-POST   /api/quiz/generate-from-pdf
-GET    /api/quiz/{quiz_id}
-POST   /api/quiz/{quiz_id}/submit
-
-GET    /api/attempt/{attempt_id}
-GET    /api/history
+## Frontend runs on:
+```bash
+http://localhost:3000
 ```
 
-One thing I was deliberate about — `GET /api/quiz/{quiz_id}` does not return correct answers. Anyone could open the network tab and cheat otherwise. Correct answers only come back through `GET /api/attempt/{attempt_id}` after the quiz is submitted.
 
 ---
 
-## Features implemented vs skipped
+# Database Design Decisions
 
-**Built:**
-- JWT authentication with protected routes
-- Topic-based quiz generation using Groq LLaMA 3.3 70B
-- PDF and TXT upload — AI generates questions from your own material (up to 50 pages, 10MB)
-- Full quiz-taking flow with progress bar
-- Score calculation and per-question answer review with correct/incorrect indicators
-- Retake same quiz and retake with new AI-generated questions
-- Full quiz history with color-coded scores
-- Dashboard with real stats from history (quizzes taken, avg score, best score)
-- Loading states, error handling, and empty states throughout
+The database was designed with simplicity and performance in mind.
 
-**Skipped:**
-- Forgot password — needs an email service to work. Not worth the complexity for the core flow.
-- Social login — not needed for the MVP.
-- PDF drag and drop — the file picker works fine for what's needed here.
+## User
+
+Uses Django’s built-in User model.
+
+Reasons:
+
+- Secure password hashing
+- Built-in authentication
+- Admin panel support
 
 ---
 
-## Challenges I ran into
+## Quiz
 
-**Getting consistent JSON from the AI** — Groq would sometimes return JSON inside markdown code blocks. Built a parser with multiple fallback strategies: direct parse, fenced block extraction, and raw brace block extraction.
+Stores quiz metadata.
 
-**Duplicate option labels** — The AI was returning options like "A) Overfitting" and the frontend was also adding "A." — showing "A. A) Overfitting". Fixed with a regex in `ai_service.py` that strips the AI's label before saving.
+Fields include:
 
-**Model got deprecated mid-project** — Was using `mixtral-8x7b-32768` and Groq decommissioned it. Switched to `llama-3.3-70b-versatile` which has a bigger context window — better for PDF content anyway.
+- topic
+- difficulty
+- number of questions
+- creation timestamp
 
-**No shell access on Render free tier** — Couldn't run migrations manually. Solved by adding `python manage.py migrate` to the build command so it runs automatically on every deploy.
+Questions are generated **once when the quiz is created**.
 
-**Retake design decision** — Went back and forth on whether retaking should show same questions or new ones. Built both. Retake Same reuses existing questions and creates a new attempt — good for tracking improvement. Retake New generates fresh questions — good for variety. Both buttons are on the result page and history page.
+This ensures:
 
----
-
-## Tech stack
-
-| | |
-|---|---|
-| Frontend | Next.js 14 (App Router), Tailwind CSS |
-| Backend | Django, Django REST Framework |
-| Database | PostgreSQL |
-| AI | Groq API — LLaMA 3.3 70B |
-| Auth | JWT via djangorestframework-simplejwt |
-| PDF parsing | pdfplumber |
-| Deployed on | Vercel (frontend) and Render (backend) |
+- Faster quiz loading
+- No dependency on AI availability during quiz attempts
 
 ---
 
-> The backend runs on Render's free tier which spins down after inactivity. The first request after a quiet period can take around 50 seconds. After that it's fast.
+## Question
+
+Each quiz contains multiple questions.
+
+Each question stores:
+
+- question text
+- option A
+- option B
+- option C
+- option D
+- correct answer
+
+A flat structure was chosen instead of a separate choices table because each question always contains exactly four options.
+
+---
+
+## QuizAttempt
+
+Stores each time a user attempts a quiz.
+
+Allows:
+
+- multiple attempts
+- performance tracking
+- quiz history
+
+---
+
+## UserAnswer
+
+Stores each answer submitted during a quiz attempt.
+
+Includes:
+
+- selected option
+- whether the answer was correct
+
+Correctness is stored directly to avoid recalculating results later.
+
+---
+
+# Database Relationships
+User ──< Quiz ──< Question
+User ──< QuizAttempt ──< UserAnswer
+Quiz ──< QuizAttempt
+Question ──< UserAnswer
+
+
+---
+
+# API Structure
+
+## Authentication
+
+Register user
+
+
+POST /api/auth/register
+
+
+Login user
+
+
+POST /api/auth/login
+
+
+Returns JWT token.
+
+---
+
+## Quiz Generation
+
+Generate quiz from topic
+
+
+POST /api/quiz/generate
+
+
+Example request
+
+
+{
+"topic": "Machine Learning",
+"difficulty": "medium",
+"num_questions": 10
+}
+
+
+---
+
+Generate quiz from PDF
+
+
+POST /api/quiz/generate-from-pdf
+
+
+Backend process:
+
+1. Extract text using pdfplumber
+2. Limit pages to avoid extremely large inputs
+3. Send extracted text to AI model
+4. Store generated questions
+
+---
+
+## Quiz Retrieval
+
+
+GET /api/quiz/{quiz_id}
+
+
+Returns quiz questions.
+
+Correct answers are not included at this stage.
+
+---
+
+## Quiz Submission
+
+
+POST /api/quiz/{quiz_id}/submit
+
+
+Submits answers and calculates the score.
+
+---
+
+## Results
+
+
+GET /api/attempt/{attempt_id}
+
+
+Returns full result and answer review.
+
+---
+
+## Quiz History
+
+
+GET /api/history
+
+
+Returns all quiz attempts for the logged-in user.
+
+---
+
+# Key API Security Decision
+
+Correct answers are **not returned when fetching quiz questions**.
+
+
+GET /api/quiz/{quiz_id}
+
+
+This prevents users from inspecting the browser network tab to obtain answers before submitting.
+
+Correct answers are only revealed after submission.
+
+---
+
+# Challenges Faced
+
+## AI Output Formatting
+
+The AI sometimes returned JSON wrapped inside markdown code blocks.
+
+Solution:
+
+A parser was implemented to handle:
+
+- plain JSON
+- markdown blocks
+- raw text extraction
+
+---
+
+## Duplicate Option Labels
+
+AI sometimes returned answers like
+
+
+A) Overfitting
+
+
+while the frontend added labels again.
+
+This produced:
+
+
+A. A) Overfitting
+
+
+The backend now cleans labels before storing options.
+
+---
+
+## Model Deprecation
+
+An earlier AI model used during development was deprecated.
+
+The system was updated to use
+
+
+LLaMA 3.3 70B
+
+
+which also supports larger context sizes for PDF processing.
+
+---
+
+## Deployment Issues
+
+Since frontend and backend were deployed on different platforms (Vercel and Render), CORS configuration was required.
+
+---
+
+# Features Implemented
+
+- User registration and login
+- Topic-based quiz generation
+- PDF-based quiz generation
+- Interactive quiz interface
+- Result analysis and review
+- Quiz history
+- Retake quiz functionality 
+- Responsive UI
+- Deployment to Vercel and Render
+
+---
+
+# Features Skipped
+
+Some features were considered but not implemented:
+
+- Password reset via email
+- Social login
+- Multiplayer quizzes
+
+These would require additional infrastructure and were outside the scope of the assignment.
+
+---
+
+# Future Improvements
+
+Possible future enhancements include:
+
+- AI explanations for answers
+- Leaderboards
+- Timed quizzes
+- Quiz sharing via link
+- Download quiz results as PDF
+- OCR support for scanned PDFs
+
+---
+
+# Author
+
+Samantha  
+Integrated MSc Software Systems  
+PSG College of Technology
