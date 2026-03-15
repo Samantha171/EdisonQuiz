@@ -3,7 +3,7 @@
 This is a fullstack AI-powered quiz application built for an interview assignment.
 
 - **Frontend**: Next.js (App Router), Tailwind CSS, Axios
-- **Backend**: Django, Django REST Framework, PostgreSQL, JWT (SimpleJWT), Gemini API
+- **Backend**: Django, Django REST Framework, PostgreSQL, JWT (SimpleJWT), Groq API
 
 ## Backend (Django)
 
