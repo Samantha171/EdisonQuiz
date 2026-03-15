@@ -147,19 +147,27 @@ The AI model is used to generate quiz questions based on topic or PDF content.
 
 # System Architecture
 
-Frontend (Next.js)
-│
-▼
-API Requests
-│
-▼
-Django Backend (REST API)
-│
-▼
-Groq AI Model
-│
-▼
-PostgreSQL Database
+
+\```
+User (Browser)
+      │
+      │  HTTP Requests
+      ▼
+Frontend — Next.js
+(Deployed on Vercel)
+      │
+      │  REST API Calls (Axios)
+      │  JWT Token in Headers
+      ▼
+Backend — Django REST Framework
+(Deployed on Render)
+      │
+      ├──────────────────────┐
+      │                      │
+      ▼                      ▼
+PostgreSQL Database     Groq AI API
+(Render)                (LLaMA 3.3 70B)
+\```
 
 
 ---
