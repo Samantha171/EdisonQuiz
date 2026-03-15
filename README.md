@@ -194,30 +194,6 @@ git clone https://github.com/Samantha171/EdisonQuiz.git
 cd EdisonQuiz/backend
 ```
 
----
-
-# Running the Project Locally
-
-## Prerequisites
-
-Make sure the following are installed:
-
-- Python 3.10 or higher
-- Node.js 18 or higher
-- PostgreSQL
-- Groq API key
-
----
-
-# Backend Setup
-
-## Clone the repository
-
-```bash
-git clone https://github.com/Samantha171/EdisonQuiz.git
-cd EdisonQuiz/backend
-```
-
 ## Create virtual environment
 
 ```bash
@@ -404,7 +380,6 @@ One question can appear in many answers (across attempts).
 ## Authentication
 
 Register user
-
 
 POST /api/auth/register
 
