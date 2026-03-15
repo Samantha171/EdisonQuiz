@@ -370,11 +370,23 @@ Correctness is stored directly to avoid recalculating results later.
 ---
 
 # Database Relationships
-User ──< Quiz ──< Question
-User ──< QuizAttempt ──< UserAnswer
-Quiz ──< QuizAttempt
-Question ──< UserAnswer
+- User ──< Quiz
+- One user can create many quizzes
 
+- User ──< QuizAttempt
+- One user can have many attempts
+
+- Quiz ──< Question
+- One quiz has many questions
+
+- Quiz ──< QuizAttempt
+- One quiz can have many attempts (retakes)
+
+- QuizAttempt ──< UserAnswer
+- One attempt has many answers (one per question)
+
+- Question ──< UserAnswer
+- One question can appear in many answers (across attempts)
 
 ---
 
