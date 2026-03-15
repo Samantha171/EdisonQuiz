@@ -1,130 +1,166 @@
-EdisonQuiz — AI-Powered Quiz Application
+# EdisonQuiz
 
-Generate personalized quizzes instantly using AI. Practice smarter, stay motivated, and track your learning progress over time.
+An AI-powered quiz app where you can generate quizzes on any topic, take them, and track how you improve over time. You can also upload your own study material (PDF or TXT) and the AI will generate questions directly from it.
 
-Live Demo
+**Live App:** https://edisonquiz.vercel.app  
+**Backend API:** https://edisonquiz-backend.onrender.com  
+**GitHub:** https://github.com/Samantha171/EdisonQuiz
 
-Frontend: https://edisonquiz.vercel.app
-Backend API: https://edisonquiz-backend.onrender.com
+---
 
-GitHub Repository
-https://github.com/Samantha171/EdisonQuiz
+## What it does
 
-Tech Stack
-LayerTechnologyFrontendNext.js 14 (App Router), Tailwind CSSBackendDjango 5, Django REST FrameworkDatabasePostgreSQLAIGroq API (LLaMA 3.3 70B)AuthJWT (djangorestframework-simplejwt)PDF ParsingpdfplumberFrontend DeployVercelBackend DeployRender
+- Register and log in securely
+- Generate a quiz on any topic — just type what you want to be tested on
+- Upload a PDF or TXT file and get questions based on your own material
+- Take the quiz one question at a time with a progress bar
+- See your score and review every answer after submitting
+- Retake the same quiz to track improvement, or generate fresh questions on the same topic
+- View your full quiz history with scores and dates
 
-How to Run Locally
-Prerequisites
+---
 
-Python 3.10+
-Node.js 18+
-PostgreSQL
-Groq API key (free at console.groq.com)
+## Running it locally
 
-Backend Setup
-bash# Clone the repository
+You'll need Python 3.10+, Node.js 18+, PostgreSQL, and a free Groq API key from [console.groq.com](https://console.groq.com).
+
+**Backend**
+
+```bash
 git clone https://github.com/Samantha171/EdisonQuiz.git
 cd EdisonQuiz/backend
 
-# Create virtual environment
 python -m venv venv
-venv\Scripts\activate        # Windows
-source venv/bin/activate     # Mac/Linux
+venv\Scripts\activate  # Windows
+source venv/bin/activate  # Mac/Linux
 
-# Install dependencies
 pip install -r requirements.txt
+```
 
-# Create .env file in backend/ folder
-SECRET_KEY=your-secret-key
+Create a `.env` file inside `backend/`:
+
+```
+SECRET_KEY=any-random-string
 DB_NAME=quizdb
 DB_USER=postgres
-DB_PASSWORD=yourpassword
+DB_PASSWORD=your-password
 DB_HOST=localhost
 DB_PORT=5432
 AI_API_KEY=your-groq-api-key
 DEBUG=True
+```
 
-# Run migrations
+Then run:
+
+```bash
 python manage.py migrate
-
-# Start server
 python manage.py runserver
-Frontend Setup
-bashcd EdisonQuiz/frontend
+```
 
-# Install dependencies
+**Frontend**
+
+```bash
+cd EdisonQuiz/frontend
 npm install
+```
 
-# Create .env.local file in frontend/ folder
+Create a `.env.local` file inside `frontend/`:
+
+```
 NEXT_PUBLIC_API_URL=http://localhost:8000
+```
 
-# Start development server
+Then run:
+
+```bash
 npm run dev
-Open http://localhost:3000
+```
 
-Database Design Decisions
-Schema — 4 Tables
-User ──< Quiz ──< Question
-User ──< QuizAttempt ──< UserAnswer
-Quiz ──< QuizAttempt
-Question ──< UserAnswer
-User
-Django's built-in User model. No custom model needed since Django provides authentication, password hashing, and admin panel out of the box.
-Quiz
-Stores quiz metadata — topic, difficulty, num_questions. Questions are generated once at creation and stored permanently. This means quiz-taking is fast and does not depend on AI availability at quiz time.
-Question
-Stores each MCQ with option_a, option_b, option_c, option_d and correct_answer as direct fields instead of a separate Choice table. Since AI always generates exactly 4 options, a flat structure is simpler, faster to query, and easier to maintain.
-QuizAttempt
-Each time a user takes a quiz, a new attempt row is created. This enables retake tracking and full performance history. total_questions is intentionally NOT stored here — it is derived from quiz.num_questions to avoid redundant data.
-UserAnswer
-Stores each answer submitted per attempt with is_correct denormalized for fast result retrieval without re-joining through Question.
+Open [http://localhost:3000](http://localhost:3000) and you're good to go.
 
-API Structure
-Authentication
-POST /api/auth/register   — Register new user
-POST /api/auth/login      — Login, returns JWT token
-Quiz
-POST /api/quiz/generate            — Generate quiz from topic using AI
-POST /api/quiz/generate-from-pdf   — Generate quiz from uploaded PDF
-GET  /api/quiz/{quiz_id}           — Get quiz questions (correct answers excluded)
-POST /api/quiz/{quiz_id}/submit    — Submit answers, calculate score
-Results and History
-GET /api/attempt/{attempt_id}  — Get result with answer review
-GET /api/history               — Get all attempts for logged-in user
-Key API Decision
-Correct answers are deliberately excluded from GET /api/quiz/{quiz_id}. Users cannot inspect the network tab to cheat. Correct answers are only returned after submission via GET /api/attempt/{attempt_id}.
+---
 
-Features Implemented vs Skipped
-Implemented
-FeatureNotesUser registration and loginJWT authenticationTopic-based quiz generationGroq LLaMA 3.3 70BPDF-based quiz generationpdfplumber, 50 pages max, 10MB limitQuiz taking with progress barOne question at a timeScore calculationAutomatic on submitAnswer review with correct/incorrect indicatorsPer question breakdownQuiz historyAll attempts with scores and datesRetake same quizNew attempt, same questions — tracks improvementRetake new quizFresh AI generation on same topicDashboard statsReal data — quizzes taken, avg score, best scoreResponsive UITailwind CSS, dark purple themeLoading and error statesThroughout all pages
-Skipped
-FeatureReasonForgot passwordRequires email service configuration — significant complexity with minimal impact on core functionalitySocial loginOut of scope for MVPMultiplayer quizComplex real-time requirement, not in assignment scopePDF drag and dropNice to have — basic upload works correctly
+## Database design
 
-Challenges Faced and Solutions
-1. AI JSON Parsing Reliability
-Groq sometimes returns JSON wrapped in markdown code blocks instead of plain JSON. Built a robust parser in ai_service.py with three fallback strategies — direct JSON parse, fenced block extraction via regex, and raw brace block extraction.
-2. Duplicate Option Labels
-AI was returning options like "A) Overfitting" and the frontend was adding an "A." prefix — resulting in "A. A) Overfitting". Fixed with a regex pattern in ai_service.py that strips leading A), B. patterns before storing questions in the database.
-3. Model Deprecation
-Initially used mixtral-8x7b-32768 which was decommissioned by Groq mid-development. Switched to llama-3.3-70b-versatile which has a 32k context window — actually better for PDF processing.
-4. Render Free Tier Limitations
-Shell access is not available on Render free tier making it impossible to run manage.py migrate manually. Solved by adding python manage.py migrate to the build command so migrations run automatically on every deploy.
-5. Browser Autofill Styling
-Browser autofill was overriding input background colors and breaking the dark theme. Fixed with -webkit-box-shadow CSS inset override in global styles.
-6. Retake Logic Design
-Considered two approaches — same questions on retake vs generating new questions. Chose to offer both options. Retake Same uses existing Quiz and creates a new QuizAttempt — allowing users to track improvement. Retake New calls the generate endpoint with the same parameters — giving variety without any schema changes.
+I kept the schema as simple as possible — 4 tables total.
 
-Architectural Decisions
-Why JWT over sessions?
-JWT is stateless — works perfectly with a separate Next.js frontend and Django API without requiring server-side session storage.
-Why generate questions upfront?
-AI calls happen at quiz creation, not during quiz-taking. This ensures a fast, reliable quiz experience even if the AI service is temporarily unavailable.
-Why a separate QuizAttempt model?
-Enables retake functionality cleanly. Each attempt is independent with its own score and answers — no need to delete or modify previous data when retaking.
-Why flat options on the Question model?
-AI always generates exactly 4 options (A, B, C, D). A separate Choice table would add unnecessary joins with zero benefit for this fixed structure.
-Why Groq over OpenAI?
-Groq offers a generous free tier with no credit card required — making it ideal for a portfolio project. The LLaMA 3.3 70B model performs well for structured JSON generation.
+**User** — I used Django's built-in User model instead of building a custom one. It already handles password hashing, authentication, and the admin panel out of the box.
 
-Note on Free Tier Deployment
-The backend is hosted on Render free tier. Free instances spin down after inactivity and may take up to 50 seconds to respond on the first request after a period of inactivity. Subsequent requests are fast. This is expected behavior on the free plan.
+**Quiz** — Stores the topic, difficulty, and number of questions. Questions are generated upfront when a quiz is created and saved to the database. This makes quiz-taking instant and independent of AI availability.
+
+**Question** — Each question has `option_a`, `option_b`, `option_c`, `option_d`, and `correct_answer` stored directly on the row. I considered a separate Choice table but since the AI always generates exactly 4 options, it would've just added extra joins with no real benefit.
+
+**QuizAttempt** — Every time someone takes a quiz, a new attempt row is created. This is what makes the retake feature work cleanly — each attempt is fully independent. I intentionally didn't store `total_questions` here since it's already on the Quiz table — no point storing the same value twice.
+
+**UserAnswer** — Stores the answer the user picked for each question along with whether it was correct. Keeping `is_correct` here means the result page doesn't need to re-join through Question to figure out what was right or wrong.
+
+---
+
+## API structure
+
+```
+POST   /api/auth/register
+POST   /api/auth/login
+
+POST   /api/quiz/generate
+POST   /api/quiz/generate-from-pdf
+GET    /api/quiz/{quiz_id}
+POST   /api/quiz/{quiz_id}/submit
+
+GET    /api/attempt/{attempt_id}
+GET    /api/history
+```
+
+One thing I was deliberate about — `GET /api/quiz/{quiz_id}` does not return correct answers. Anyone could open the network tab and cheat otherwise. Correct answers only come back through `GET /api/attempt/{attempt_id}` after the quiz is submitted.
+
+---
+
+## Features implemented vs skipped
+
+**Built:**
+- JWT authentication with protected routes
+- Topic-based quiz generation using Groq LLaMA 3.3 70B
+- PDF and TXT upload — AI generates questions from your own material (up to 50 pages, 10MB)
+- Full quiz-taking flow with progress bar
+- Score calculation and per-question answer review with correct/incorrect indicators
+- Retake same quiz and retake with new AI-generated questions
+- Full quiz history with color-coded scores
+- Dashboard with real stats from history (quizzes taken, avg score, best score)
+- Loading states, error handling, and empty states throughout
+
+**Skipped:**
+- Forgot password — needs an email service to work. Not worth the complexity for the core flow.
+- Social login — not needed for the MVP.
+- PDF drag and drop — the file picker works fine for what's needed here.
+
+---
+
+## Challenges I ran into
+
+**Getting consistent JSON from the AI** — Groq would sometimes return JSON inside markdown code blocks. Built a parser with multiple fallback strategies: direct parse, fenced block extraction, and raw brace block extraction.
+
+**Duplicate option labels** — The AI was returning options like "A) Overfitting" and the frontend was also adding "A." — showing "A. A) Overfitting". Fixed with a regex in `ai_service.py` that strips the AI's label before saving.
+
+**Model got deprecated mid-project** — Was using `mixtral-8x7b-32768` and Groq decommissioned it. Switched to `llama-3.3-70b-versatile` which has a bigger context window — better for PDF content anyway.
+
+**No shell access on Render free tier** — Couldn't run migrations manually. Solved by adding `python manage.py migrate` to the build command so it runs automatically on every deploy.
+
+**Retake design decision** — Went back and forth on whether retaking should show same questions or new ones. Built both. Retake Same reuses existing questions and creates a new attempt — good for tracking improvement. Retake New generates fresh questions — good for variety. Both buttons are on the result page and history page.
+
+---
+
+## Tech stack
+
+| | |
+|---|---|
+| Frontend | Next.js 14 (App Router), Tailwind CSS |
+| Backend | Django, Django REST Framework |
+| Database | PostgreSQL |
+| AI | Groq API — LLaMA 3.3 70B |
+| Auth | JWT via djangorestframework-simplejwt |
+| PDF parsing | pdfplumber |
+| Deployed on | Vercel (frontend) and Render (backend) |
+
+---
+
+> The backend runs on Render's free tier which spins down after inactivity. The first request after a quiet period can take around 50 seconds. After that it's fast.
