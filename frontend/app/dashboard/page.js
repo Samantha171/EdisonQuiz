@@ -21,7 +21,7 @@ export default function DashboardPage() {
     avgScore: 0,
     bestScore: 0
   });
-  
+
   useEffect(() => {
     // fetch real stats from history
     const fetchStats = async () => {
@@ -29,12 +29,12 @@ export default function DashboardPage() {
         const res = await api.get("/api/history");
         const attempts = res.data;
         if (attempts.length === 0) return;
-  
+
         const total = attempts.length;
         const scores = attempts.map(a => (a.score / a.num_questions) * 100);
         const avg = Math.round(scores.reduce((a, b) => a + b, 0) / total);
         const best = Math.round(Math.max(...scores));
-  
+
         setStats({ quizzesTaken: total, avgScore: avg, bestScore: best });
       } catch (err) {
         console.log("Failed to load stats");
@@ -53,7 +53,7 @@ export default function DashboardPage() {
             <div className="w-full space-y-8">
               <div className="text-center md:text-left">
                 <h1 className="text-2xl font-semibold tracking-tight text-slate-100 md:text-3xl">
-                  Welcome back, {username || "there"} 👋
+                  Ready to test yourself, {username || "there"} ?
                 </h1>
                 <p className="mt-1 text-sm text-slate-300">
                   What would you like to do today?
