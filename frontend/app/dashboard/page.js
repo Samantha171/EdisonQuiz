@@ -55,9 +55,6 @@ export default function DashboardPage() {
                 <h1 className="text-2xl font-semibold tracking-tight text-slate-100 md:text-3xl">
                   Ready to test yourself, {username || "there"} ?
                 </h1>
-                <p className="mt-1 text-sm text-slate-300">
-                  What would you like to do today?
-                </p>
               </div>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
