@@ -4,6 +4,7 @@ Django settings for quizapp project.
 
 from pathlib import Path
 import os
+import dj_database_url
 
 from datetime import timedelta
 from dotenv import load_dotenv
@@ -20,7 +21,7 @@ if env_path.exists():
 SECRET_KEY = os.getenv("SECRET_KEY", "django-secret-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "True") == "True"
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = ["*"]
 
@@ -58,6 +59,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = "quizapp.urls"
@@ -81,15 +83,16 @@ WSGI_APPLICATION = "quizapp.wsgi.application"
 
 # Database - PostgreSQL
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("DB_NAME", "quizdb"),
-        "USER": os.getenv("DB_USER", "postgres"),
-        "PASSWORD": os.getenv("DB_PASSWORD", "password"),
-        "HOST": os.getenv("DB_HOST", "localhost"),
-        "PORT": os.getenv("DB_PORT", "5432"),
-    }
+    "default": dj_database_url.config(
+        default=os.getenv("DATABASE_URL"),
+        conn_max_age=600,
+    )
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    os.getenv("FRONTEND_URL", "http://localhost:3000"),
+]
 
 # REST Framework / JWT
 REST_FRAMEWORK = {
